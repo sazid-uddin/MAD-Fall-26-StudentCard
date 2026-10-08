@@ -1,4 +1,7 @@
-import { StyleSheet, Text, View } from "react-native";
+// ADD 'useState' to the react import
+import { useState } from "react";
+// ADD 'TouchableOpacity' to the react-native import
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 // Define the shape of the props our component expects
 interface ProfileCardProps {
@@ -18,6 +21,15 @@ export default function ProfileCard({ name, studentId, department, bio }: Profil
         .map((word) => word[0]) // ['S', 'U']
         .join(""); // 'SU'
 
+    // NEW: declare a state variable 'followed', starting as false
+    // setFollowed is the function we call to change it
+    const [followed, setFollowed] = useState(false);
+
+    // NEW: toggle function — flips followed between true and false
+    const handleFollow = () => {
+        setFollowed(!followed);
+    };
+
     return (
         <View style={styles.card}>
             <View style={styles.avatar}>
@@ -32,6 +44,10 @@ export default function ProfileCard({ name, studentId, department, bio }: Profil
             <View style={styles.divider} />
 
             <Text style={styles.bio}>{bio}</Text>
+            {/* NEW: Follow button — style changes based on followed state */}
+            <TouchableOpacity style={[styles.button, followed && styles.buttonFollowed]} onPress={handleFollow}>
+                <Text style={[styles.buttonText, followed && styles.buttonTextFollowed]}>{followed ? "Following ✓" : "Follow"}</Text>
+            </TouchableOpacity>
         </View>
     );
 }
@@ -96,5 +112,26 @@ const styles = StyleSheet.create({
         color: "#64748B",
         textAlign: "center",
         lineHeight: 22,
+    },
+    // ADD these new button styles at the bottom:
+    button: {
+        marginTop: 20,
+        paddingVertical: 10,
+        paddingHorizontal: 32,
+        borderRadius: 24,
+        borderWidth: 2,
+        borderColor: "#0D9488",
+        backgroundColor: "transparent",
+    },
+    buttonFollowed: {
+        backgroundColor: "#0D9488", // filled when following
+    },
+    buttonText: {
+        fontSize: 14,
+        fontWeight: "600",
+        color: "#0D9488",
+    },
+    buttonTextFollowed: {
+        color: "#FFFFFF", // white text when following
     },
 });

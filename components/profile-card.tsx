@@ -9,12 +9,13 @@ interface ProfileCardProps {
     studentId: string;
     department: string;
     bio: string;
+    skills?: string[]; // NEW: optional array of skills
 }
 
 // The component receives 'props' — an object containing
 // all the data passed in from the parent component.
 // We destructure it immediately for clean code.
-export default function ProfileCard({ name, studentId, department, bio }: ProfileCardProps) {
+export default function ProfileCard({ name, studentId, department, bio, skills }: ProfileCardProps) {
     // Build initials from the name prop
     const initials = name // “Md. Sazid Uddin”
         .split(" ") // ['Sazid', 'Uddin']
@@ -44,6 +45,18 @@ export default function ProfileCard({ name, studentId, department, bio }: Profil
             <View style={styles.divider} />
 
             <Text style={styles.bio}>{bio}</Text>
+
+            {/* NEW: Skills section — add this above the Follow button */}
+            {skills && skills.length > 0 && (
+                <View style={styles.skillsContainer}>
+                    {skills.map((skill, index) => (
+                        <View key={index} style={styles.skillBadge}>
+                            <Text style={styles.skillText}>{skill}</Text>
+                        </View>
+                    ))}
+                </View>
+            )}
+
             {/* NEW: Follow button — style changes based on followed state */}
             <TouchableOpacity style={[styles.button, followed && styles.buttonFollowed]} onPress={handleFollow}>
                 <Text style={[styles.buttonText, followed && styles.buttonTextFollowed]}>{followed ? "Following ✓" : "Follow"}</Text>
@@ -133,5 +146,25 @@ const styles = StyleSheet.create({
     },
     buttonTextFollowed: {
         color: "#FFFFFF", // white text when following
+    },
+    skillsContainer: {
+        flexDirection: "row", // lay badges out horizontally
+        flexWrap: "wrap", // wrap to next line when full
+        justifyContent: "center",
+        marginTop: 12,
+        gap: 8,
+    },
+    skillBadge: {
+        backgroundColor: "#EFF6FF",
+        borderRadius: 20,
+        paddingHorizontal: 12,
+        paddingVertical: 5,
+        borderWidth: 1,
+        borderColor: "#BFDBFE",
+    },
+    skillText: {
+        fontSize: 12,
+        color: "#1D4ED8",
+        fontWeight: "500",
     },
 });
